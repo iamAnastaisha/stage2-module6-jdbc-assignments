@@ -27,10 +27,10 @@ public class SimpleJDBCRepository {
     private static final String findAllUserSQL = "SELECT * FROM myusers;";
 
     public Long createUser(User user) {
-        long id = 1L;
+        long id = 0L;
         try {
             connection = CustomDataSource.getInstance().getConnection();
-            ps = connection.prepareStatement(createUserSQL);
+            ps = connection.prepareStatement(createUserSQL,  Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, user.getFirstName());
             ps.setString(2, user.getLastName());
             ps.setInt(3, user.getAge());
@@ -56,7 +56,8 @@ public class SimpleJDBCRepository {
         int age = 0;
         try {
             connection = CustomDataSource.getInstance().getConnection();
-            ps = connection.prepareStatement(findUserByIdSQL.concat(userId.toString()).concat(";"));
+            ps = connection.prepareStatement(findUserByIdSQL);
+            ps.setLong(1, userId);
             ResultSet resultSet = ps.executeQuery();
             while (resultSet.next()) {
                 firstName = resultSet.getString(2);
@@ -79,7 +80,8 @@ public class SimpleJDBCRepository {
         User user;
         try {
             connection = CustomDataSource.getInstance().getConnection();
-            ps = connection.prepareStatement(findUserByNameSQL.concat(userName).concat(";"));
+            ps = connection.prepareStatement(findUserByNameSQL);
+            ps.setString(1, userName);
             ResultSet resultSet = ps.executeQuery();
             if (resultSet.next()) {
                 userId = resultSet.getLong(1);
@@ -140,7 +142,7 @@ public class SimpleJDBCRepository {
             connection = CustomDataSource.getInstance().getConnection();
             ps = connection.prepareStatement(deleteUser);
             ps.setLong(1, userId);
-            ps.executeUpdate();
+            int isDeleted = ps.executeUpdate();
             connection.close();
             ps.close();
         } catch (SQLException e) {
