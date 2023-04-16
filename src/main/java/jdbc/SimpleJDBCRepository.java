@@ -43,8 +43,8 @@ public class SimpleJDBCRepository {
                 }
                 resultSet.close();
             }
-            ps.executeUpdate();
             connection.close();
+            ps.close();
         } catch (SQLException e) {
             throw new RuntimeException();
         }
@@ -52,32 +52,47 @@ public class SimpleJDBCRepository {
     }
 
     public User findUserById(Long userId) {
-        User user;
+        String firstName = null;
+        String lastName = null;
+        int age = 0;
         try {
             connection = CustomDataSource.getInstance().getConnection();
             ps = connection.prepareStatement(findUserByIdSQL.concat(userId.toString()).concat(";"));
             ResultSet resultSet = ps.executeQuery();
-
-            user = new User(resultSet.getLong("id"), resultSet.getString("firstName"),
-                    resultSet.getString("lastName"), resultSet.getInt("age"));
+            while (resultSet.next()) {
+                firstName = resultSet.getString(2);
+                lastName = resultSet.getString(3);
+                age = resultSet.getInt(4);
+            }
             connection.close();
             resultSet.close();
+            ps.close();
         } catch (SQLException  e) {
             throw new RuntimeException();
         }
-        return user;
+        return new User(userId, firstName, lastName, age);
     }
 
     public User findUserByName(String userName) {
+        long userId = 0L;
+        String lastName = null;
+        int age = 0;
         User user;
         try {
             connection = CustomDataSource.getInstance().getConnection();
             ps = connection.prepareStatement(findUserByNameSQL.concat(userName).concat(";"));
             ResultSet resultSet = ps.executeQuery();
-            user = new User(resultSet.getLong("id"), resultSet.getString("firstName"),
-                    resultSet.getString("lastName"), resultSet.getInt("age"));
+            if (resultSet.next()) {
+                userId = resultSet.getLong(1);
+                lastName = resultSet.getString(3);
+                age = resultSet.getInt(4);
+                user = new User(userId, userName, lastName, age);
+            } else {
+                user = new User(0L,null,null,0);
+            }
             connection.close();
             resultSet.close();
+            ps.close();
         } catch (SQLException  e) {
             throw new RuntimeException();
         }
@@ -97,6 +112,7 @@ public class SimpleJDBCRepository {
             }
             connection.close();
             resultSet.close();
+            ps.close();
         } catch (SQLException e) {
             throw new RuntimeException();
         }
@@ -113,6 +129,7 @@ public class SimpleJDBCRepository {
             ps.setLong(4, user.getId());
             ps.executeUpdate();
             connection.close();
+            ps.close();
         } catch (SQLException e) {
             throw new RuntimeException();
         }
@@ -126,6 +143,7 @@ public class SimpleJDBCRepository {
             ps.setLong(1, userId);
             ps.executeUpdate();
             connection.close();
+            ps.close();
         } catch (SQLException e) {
             throw new RuntimeException();
         }
