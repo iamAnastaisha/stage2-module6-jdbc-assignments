@@ -97,7 +97,7 @@ public class SimpleJDBCRepository {
         return findUserById(user.getId());
     }
 
-    private void deleteUser(Long userId) throws SQLException, IOException {
+    public void deleteUser(Long userId) throws SQLException, IOException {
         connection = CustomDataSource.getInstance().getConnection();
         ps = connection.prepareStatement(deleteUser);
         ps.setLong(1, userId);
