@@ -1,6 +1,5 @@
 package jdbc;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,7 +27,7 @@ public class SimpleJDBCRepository {
     private static final String findAllUserSQL = "SELECT * FROM myusers;";
 
     public Long createUser(User user) {
-        long id = 0L;
+        long id = 1L;
         try {
             connection = CustomDataSource.getInstance().getConnection();
             ps = connection.prepareStatement(createUserSQL);
@@ -46,7 +45,7 @@ public class SimpleJDBCRepository {
             connection.close();
             ps.close();
         } catch (SQLException e) {
-            throw new RuntimeException();
+            throw new RuntimeException(e);
         }
         return id;
     }
@@ -68,15 +67,15 @@ public class SimpleJDBCRepository {
             resultSet.close();
             ps.close();
         } catch (SQLException  e) {
-            throw new RuntimeException();
+            throw new RuntimeException(e);
         }
         return new User(userId, firstName, lastName, age);
     }
 
     public User findUserByName(String userName) {
-        long userId = 0L;
-        String lastName = null;
-        int age = 0;
+        long userId;
+        String lastName;
+        int age;
         User user;
         try {
             connection = CustomDataSource.getInstance().getConnection();
@@ -93,8 +92,8 @@ public class SimpleJDBCRepository {
             connection.close();
             resultSet.close();
             ps.close();
-        } catch (SQLException  e) {
-            throw new RuntimeException();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
         return user;
     }
@@ -114,7 +113,7 @@ public class SimpleJDBCRepository {
             resultSet.close();
             ps.close();
         } catch (SQLException e) {
-            throw new RuntimeException();
+            throw new RuntimeException(e);
         }
         return users;
     }
@@ -131,7 +130,7 @@ public class SimpleJDBCRepository {
             connection.close();
             ps.close();
         } catch (SQLException e) {
-            throw new RuntimeException();
+            throw new RuntimeException(e);
         }
         return findUserById(user.getId());
     }
