@@ -30,7 +30,7 @@ public class CustomDataSource implements DataSource {
         instance = this;
     }
 
-    public static CustomDataSource getInstance() throws IOException {
+    public static CustomDataSource getInstance(){
         if (instance == null) {
             synchronized (CustomDataSource.class) {
                 if (instance == null) {

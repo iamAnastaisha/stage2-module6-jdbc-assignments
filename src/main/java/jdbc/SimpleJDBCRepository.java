@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +45,7 @@ public class SimpleJDBCRepository {
             }
             ps.executeUpdate();
             connection.close();
-        } catch (SQLException | IOException e) {
+        } catch (SQLException e) {
             throw new RuntimeException();
         }
         return id;
@@ -63,7 +62,7 @@ public class SimpleJDBCRepository {
                     resultSet.getString("lastName"), resultSet.getInt("age"));
             connection.close();
             resultSet.close();
-        } catch (SQLException | IOException e) {
+        } catch (SQLException  e) {
             throw new RuntimeException();
         }
         return user;
@@ -79,7 +78,7 @@ public class SimpleJDBCRepository {
                     resultSet.getString("lastName"), resultSet.getInt("age"));
             connection.close();
             resultSet.close();
-        } catch (SQLException | IOException e) {
+        } catch (SQLException  e) {
             throw new RuntimeException();
         }
         return user;
@@ -98,7 +97,7 @@ public class SimpleJDBCRepository {
             }
             connection.close();
             resultSet.close();
-        } catch (SQLException | IOException e) {
+        } catch (SQLException e) {
             throw new RuntimeException();
         }
         return users;
@@ -114,7 +113,7 @@ public class SimpleJDBCRepository {
             ps.setLong(4, user.getId());
             ps.executeUpdate();
             connection.close();
-        } catch (SQLException | IOException e) {
+        } catch (SQLException e) {
             throw new RuntimeException();
         }
         return findUserById(user.getId());
@@ -127,7 +126,7 @@ public class SimpleJDBCRepository {
             ps.setLong(1, userId);
             ps.executeUpdate();
             connection.close();
-        } catch (SQLException | IOException e) {
+        } catch (SQLException e) {
             throw new RuntimeException();
         }
     }
