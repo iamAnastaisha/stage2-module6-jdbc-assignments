@@ -9,7 +9,7 @@ public class CustomConnector {
         try {
             return DriverManager.getConnection(url);
         } catch (SQLException e) {
-            throw new RuntimeException();
+            throw new RuntimeException(e);
         }
     }
 
@@ -17,7 +17,7 @@ public class CustomConnector {
         try {
             return DriverManager.getConnection(url, user, password);
         } catch (SQLException e) {
-            throw new RuntimeException();
+            throw new RuntimeException(e);
         }
     }
 }
